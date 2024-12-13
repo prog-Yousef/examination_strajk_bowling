@@ -48,7 +48,7 @@ jobs:
           echo "Test coverage is ${COVERAGE}%"
 
           if (( $(echo "$COVERAGE < 90" | bc -l) )); then
-          echo "Test coverage is below 90%, cannot deploy."
+          echo "Test coverage is below 90%, need to be at least 90%."
           exit 1
           fi
 
