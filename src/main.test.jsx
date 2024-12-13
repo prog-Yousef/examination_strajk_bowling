@@ -8,8 +8,8 @@ import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import App from './App';
 import Booking from './views/Booking';
 import Confirmation from './views/Confirmation';
-/* import { server } from './__mocks__/server';
- */
+ import { server } from './__mocks__/server';
+ 
 import './setupTest';
 
 
