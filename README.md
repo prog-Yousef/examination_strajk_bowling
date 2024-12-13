@@ -49,5 +49,10 @@ Får Väl Godkänt ska du:
 
 Har skrivit tester för alla acceptanskriterier som är VG. Observera att det finns flera unika felmeddelanden och varje felmeddelande ska vara i sitt eget test. Här gäller det också att tänka igenom hur man skriver sina test. Om vi tar, att man ska ha fyllt i allt fält (datum, tid, antalet spelare och banor) så gäller det att testet kollar att felmeddelandet visas för flera kombinationer av vad man glömt att fylla i.
 Du ska ha över 90% coverage i dina tester.
-Inlämning
-Lämna in länk till Githubrepo med koden och tester på Azomo senast fredagen 13/12 kl 23:59.
+
+
+![image](https://github.com/user-attachments/assets/fa2ac6bd-61a7-4c78-8c96-afb9b02500a9)
+
+![image](https://github.com/user-attachments/assets/42284699-2802-436f-9e8c-d8668aee1914)
+
+
