@@ -7,7 +7,7 @@ export default defineConfig({
   test: {
     globals: true,
     environment: "jsdom",
-    setupFiles: "./setupTest.js",
+    setupFiles: "./src/setupTest.js",
     coverage: {
       provider: "v8",
       reporter: ["text", "json", "lcov", "json-summary"],
