@@ -58,6 +58,18 @@ describe('Bowling Booking System Tests', () => {
     });
 
     describe('Players and Lanes Selection', () => {
+       
+
+        it('Should allow user to select number of lanes', async () => {
+            render(<App />);
+            const chooseLanes = screen.getByText('Number of lanes').parentElement.children[1];
+            
+            await userEvent.type(chooseLanes, '2');
+            expect(chooseLanes.value).toBe('2');
+        });
+
+
+
         it('Should allow user to specify number of players', async () => {
             render(<App />);
             const choosePlayers = screen.getByText('Number of awesome bowlers').parentElement.children[1];
@@ -68,14 +80,6 @@ describe('Bowling Booking System Tests', () => {
             await userEvent.clear(choosePlayers);
             await userEvent.type(choosePlayers, '0');
             expect(choosePlayers.value).toBe('0');
-        });
-
-        it('Should allow user to select number of lanes', async () => {
-            render(<App />);
-            const chooseLanes = screen.getByText('Number of lanes').parentElement.children[1];
-            
-            await userEvent.type(chooseLanes, '2');
-            expect(chooseLanes.value).toBe('2');
         });
     });
 
@@ -130,6 +134,28 @@ describe('Bowling Booking System Tests', () => {
     });
 
     describe('Shoe Size Selection', () => {
+
+
+        it('Should validate shoe sizes', async () => {
+            render(<App />);
+
+            // Add basic booking details
+            await fillBookingForm({ players: '2', lanes: '1', shoes: 1 });
+
+            const confirmButton = screen.getByText('strIIIIIike!');
+            
+            // Try booking with incomplete shoe sizes
+            await userEvent.click(confirmButton);
+            expect(screen.getByText('Antalet skor måste stämma överens med antal spelare')).toBeDefined();
+
+            // Add another shoe without size
+            const addButton = screen.getByText('+');
+            await userEvent.click(addButton);
+            await userEvent.click(confirmButton);
+            expect(screen.getByText('Alla skor måste vara ifyllda')).toBeDefined();
+        });
+
+
         it('Should allow adding, changing, and removing shoe sizes', async () => {
             render(<App />);
 
@@ -165,24 +191,6 @@ describe('Bowling Booking System Tests', () => {
             expect(allShoes.children.length).toBe(3);
         });
 
-        it('Should validate shoe sizes', async () => {
-            render(<App />);
-
-            // Add basic booking details
-            await fillBookingForm({ players: '2', lanes: '1', shoes: 1 });
-
-            const confirmButton = screen.getByText('strIIIIIike!');
-            
-            // Try booking with incomplete shoe sizes
-            await userEvent.click(confirmButton);
-            expect(screen.getByText('Antalet skor måste stämma överens med antal spelare')).toBeDefined();
-
-            // Add another shoe without size
-            const addButton = screen.getByText('+');
-            await userEvent.click(addButton);
-            await userEvent.click(confirmButton);
-            expect(screen.getByText('Alla skor måste vara ifyllda')).toBeDefined();
-        });
     });
 
     describe('Booking Confirmation', () => {
@@ -232,32 +240,7 @@ describe('Bowling Booking System Tests', () => {
     });
 
     describe('Confirmation View Navigation', () => {
-        it('Should show "No booking" message when no booking is made', async () => {
-            render(
-                <MemoryRouter initialEntries={['/']}>
-                    <Routes>
-                        <Route path="/" element={<Booking />} />
-                        <Route path="/confirmation" element={<Confirmation />} />
-                    </Routes>
-                </MemoryRouter>
-            );
-
-            expect(screen.getByRole('navigation').parentElement).toHaveClass('booking');
-            
-            // Visit confirmation page before booking
-            await userEvent.click(screen.getAllByRole('img')[0]);
-            await userEvent.click(screen.getByText('Confirmation'));
-            expect(screen.getByRole('navigation').parentElement).toHaveClass('confirmation');
-            
-            // Check for no booking details
-            expect(screen.queryByText('When')).not.toBeInTheDocument();
-            expect(screen.queryByText('Who')).not.toBeInTheDocument();
-            expect(screen.queryByText('Lanes')).not.toBeInTheDocument();
-            expect(screen.queryByText('Booking number')).not.toBeInTheDocument();
-
-            // Check error message
-            expect(screen.getByText('Inga bokning gjord!')).toBeInTheDocument();
-        });
+        
 
         it('Should show stored booking from session storage', async () => {
             render(
@@ -290,6 +273,32 @@ describe('Bowling Booking System Tests', () => {
             expect(screen.queryByText('Who')).toBeInTheDocument();
             expect(screen.queryByText('Lanes')).toBeInTheDocument();
             expect(screen.queryByText('Booking number')).toBeInTheDocument();
+        });
+        it('Should show "No booking" message when no booking is made', async () => {
+            render(
+                <MemoryRouter initialEntries={['/']}>
+                    <Routes>
+                        <Route path="/" element={<Booking />} />
+                        <Route path="/confirmation" element={<Confirmation />} />
+                    </Routes>
+                </MemoryRouter>
+            );
+
+            expect(screen.getByRole('navigation').parentElement).toHaveClass('booking');
+            
+            // Visit confirmation page before booking
+            await userEvent.click(screen.getAllByRole('img')[0]);
+            await userEvent.click(screen.getByText('Confirmation'));
+            expect(screen.getByRole('navigation').parentElement).toHaveClass('confirmation');
+            
+            // Check for no booking details
+            expect(screen.queryByText('When')).not.toBeInTheDocument();
+            expect(screen.queryByText('Who')).not.toBeInTheDocument();
+            expect(screen.queryByText('Lanes')).not.toBeInTheDocument();
+            expect(screen.queryByText('Booking number')).not.toBeInTheDocument();
+
+            // Check error message
+            expect(screen.getByText('Inga bokning gjord!')).toBeInTheDocument();
         });
     });
 });
