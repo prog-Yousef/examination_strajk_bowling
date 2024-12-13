@@ -1,0 +1,55 @@
+name: Strajk Bowling
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+
+  test:
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install
+        run: npm ci
+      - name: run tests with coverage
+        run: npm run coverage
+      - name: Check the coverage
+        uses: themichaelhall/check-code-coverage@v2
+        with:
+          report: coverage/clover.xml
+          required-percentage: 90
+
+  build:
+
+    needs: test
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install modules
+        run: cd strajk-bowling && npm install
+
+      - name: Build dist
+        run: cd strajk-bowling && npm run build
+
+      - name: Setup pages
+        uses: actions/configure-pages@v3
+
+      - name: Upload dist folder
+        uses: actions/upload-pages-artifact@v1
+        with:
+          path: "./strajk-bowling/dist"
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v1
