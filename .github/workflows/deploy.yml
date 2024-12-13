@@ -36,21 +36,15 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Check test coverage
-        run: |
-          if [ ! -f ./coverage/coverage-summary.json ]; then
-          echo "Coverage report not found!"
-          exit 1
-          fi
-
-          echo "Coverage report found"
-
-          COVERAGE=$(cat ./coverage/coverage-summary.json | jq .total.lines.pct)
-          echo "Test coverage is ${COVERAGE}%"
-
-          if (( $(echo "$COVERAGE < 90" | bc -l) )); then
-          echo "Test coverage is below 90%, cannot deploy."
-          exit 1
-          fi
+      run: |
+        COVERAGE=$(npm run coverage | grep "All files" | awk '{print $5}' | tr -d '%')
+        echo "Current coverage is $COVERAGE%"
+        if (( $(echo "$COVERAGE < 90" | bc -l) )); then
+        echo "Coverage ($COVERAGE%) is below 90%"
+        exit 1
+        else
+        echo "Coverage check passed!"
+        fi
 
   deploy:
     runs-on: ubuntu-latest
